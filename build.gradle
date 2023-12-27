@@ -1,0 +1,31 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'application'
+}
+
+group = 'me.user'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName = 'MainKt'
+}
+
+run {
+    if (project.hasProperty('args')) {
+        args project.args.split()
+    }
+}
