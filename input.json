@@ -1,5 +1,5 @@
 [
-    {"userId": 1, "eventType": "Post", "timestamp": 1672444800},
+    {"userId": 1, "eventType": "post", "timestamp": 1672444800},
     {"userId": 1, "eventType": "likeReceived", "timestamp": 1672444801},
     {"userId": 1, "eventType": "likeReceived", "timestamp": 1672444802},
     {"userId": 1, "eventType": "comment", "timestamp": 1672444803},
