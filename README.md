@@ -48,7 +48,7 @@ The `Main` class serves as the entry point for running the application. It reads
 Run the application with the following command:
 
 ```bash
-./gradlew run -Pargs="-i input.json -o output.json [--update]"
+.\gradlew run -Pargs="-i input.json -o output.json [--update]"
 ```
 
 * -i: Input JSON file containing user events.
