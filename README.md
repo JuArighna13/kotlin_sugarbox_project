@@ -48,7 +48,7 @@ The `Main` class serves as the entry point for running the application. It reads
 Run the application with the following command:
 
 ```bash
-.\gradlew build"
+.\gradlew build
 ```
 
 ```bash
