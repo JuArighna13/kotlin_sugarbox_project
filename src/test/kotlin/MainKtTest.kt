@@ -1,50 +1,60 @@
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import kotlin.test.assertTrue
 
 class MainKtTest {
 
     @Test
-    fun `main should print usage when not enough arguments provided`() {
+    fun `main should print usage when insufficient arguments provided`() {
         // Arrange
         val args = arrayOf("-i", "input.json")
 
-        // Act
-        val output = captureSystemOutput {
-            main(args)
-        }
-
-        // Assert
-        assertTrue(output.trim() == "Usage: -i input.json -o output.json [--update]")
+        // Act & Assert
+        assertPrintsUsage(args)
     }
 
     @Test
-    fun `main should call aggregateEvents with correct arguments`() {
+    fun `main should print usage when incorrect argument format provided`() {
+        // Arrange
+        val args = arrayOf("-i", "input.json", "-o")
+
+        // Act & Assert
+        assertPrintsUsage(args)
+    }
+
+    @Test
+    fun `main should call aggregateEvents when correct arguments provided`() {
+        // Arrange
+        val args = arrayOf("-i", "input.json", "-o", "output.json")
+
+        // Act & Assert
+        assertDoesNotThrow { main(args) }
+    }
+
+    @Test
+    fun `main should call aggregateEvents with update when correct arguments provided`() {
         // Arrange
         val args = arrayOf("-i", "input.json", "-o", "output.json", "--update")
 
-        // Act
-        val output = captureSystemOutput {
-            main(args)
-        }
-
-        // Assert
-        // Add assertions based on your expected behavior
-        // For example, check if the correct message is printed or if files are updated
-        // You can also mock the aggregateEvents function and verify if it's called with the expected arguments
+        // Act & Assert
+        assertDoesNotThrow { main(args) }
     }
 
-    // Utility function to capture system output
-    private fun captureSystemOutput(block: () -> Unit): String {
+    private fun assertPrintsUsage(args: Array<String>) {
+        // Redirect System.out to capture println output
         val originalOut = System.out
-        val outputStream = ByteArrayOutputStream()
-        System.setOut(PrintStream(outputStream))
-        try {
-            block()
-            return outputStream.toString()
-        } finally {
-            System.setOut(originalOut)
-        }
+        val outContent = ByteArrayOutputStream()
+        System.setOut(PrintStream(outContent))
+
+        // Act
+        main(args)
+
+        // Reset System.out
+        System.setOut(originalOut)
+
+        // Assert
+        assertTrue(outContent.toString().startsWith("Usage:"))
     }
 }

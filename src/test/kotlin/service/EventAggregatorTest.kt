@@ -77,7 +77,6 @@ internal class EventAggregatorTest {
 
         // Assert
         val updatedSummary = objectMapper.readValue<List<DailySummary>>(tempOutputFile)
-        println(updatedSummary)
         assertEquals(3, updatedSummary.size)
         assertEquals(2, updatedSummary[0].post)
         assertEquals(1, updatedSummary[2].likeReceived)
@@ -141,6 +140,41 @@ internal class EventAggregatorTest {
 
         // Assert
         assertEquals(emptyList<DailySummary>(), result)
+    }
+
+    @Test
+    fun `readInputFile should correctly read user events from existing file`() {
+        // Arrange
+        val userEvents = listOf(
+            UserEvent(1, "post", 1672444800),
+            UserEvent(2, "likeReceived", 1672531201)
+            // Add more test events as needed
+        )
+
+        // Create temporary input file with test events
+        tempInputFile.writeText(objectMapper.writeValueAsString(userEvents))
+
+        // Act
+        val result = eventAggregator.readInputFile(tempInputFile.absolutePath)
+
+        // Assert
+        assertEquals(userEvents, result)
+    }
+
+    @Test
+    fun `writeOutputFile should write data to the specified file`() {
+        // Arrange
+        val outputData = listOf(
+            DailySummary(1, "2023-01-01", post = 2, likeReceived = 1),
+            DailySummary(2, "2023-01-02", post = 1, comment = 1)
+        )
+
+        // Act
+        eventAggregator.writeOutputFile(tempOutputFile.absolutePath, outputData)
+
+        // Assert
+        val writtenData = objectMapper.readValue<List<DailySummary>>(tempOutputFile)
+        assertEquals(outputData, writtenData)
     }
 
     // Helper function to create a temporary file

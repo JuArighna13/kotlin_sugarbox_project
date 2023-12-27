@@ -1,25 +1,27 @@
 package dto
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class DailySummaryTest {
-    private val objectMapper: ObjectMapper = jacksonObjectMapper().registerKotlinModule()
 
     @Test
-    fun `serialize and deserialize DailySummary should match`() {
+    fun `DailySummary should have correct properties`() {
         // Arrange
-        val dailySummary = DailySummary(userId = 1, date = "2023-01-01", post = 2, likeReceived = 1)
+        val dailySummary = DailySummary(userId = 1, date = "2023-01-01", post = 2, likeReceived = 1, comment = 3)
 
         // Act
-        val jsonString = objectMapper.writeValueAsString(dailySummary)
-        val deserialized = objectMapper.readValue<DailySummary>(jsonString)
+        val userId = dailySummary.userId
+        val date = dailySummary.date
+        val post = dailySummary.post
+        val likeReceived = dailySummary.likeReceived
+        val comment = dailySummary.comment
 
         // Assert
-        assertEquals(dailySummary, deserialized)
+        assertEquals(1, userId)
+        assertEquals("2023-01-01", date)
+        assertEquals(2, post)
+        assertEquals(1, likeReceived)
+        assertEquals(3, comment)
     }
 }

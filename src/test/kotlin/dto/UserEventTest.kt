@@ -20,6 +20,4 @@ class UserEventTest {
         assertEquals("post", eventType)
         assertEquals(1672444800, timestamp)
     }
-
-    // Add more test cases as needed
 }

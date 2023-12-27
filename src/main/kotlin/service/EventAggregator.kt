@@ -25,7 +25,10 @@ class EventAggregator {
     fun readExistingOutput(outputFileName: String): List<DailySummary> =
         try {
             objectMapper.readValue(File(outputFileName))
-        } catch (e: Exception) {
+        } catch (e: FileNotFoundException) {
+            println("Error: File not found - $outputFileName $e")
+            emptyList()
+        }catch (e: Exception) {
             println("Error reading from $outputFileName: ${e.message}")
             emptyList()
         }
@@ -46,6 +49,15 @@ class EventAggregator {
             println("Error reading from $inputFileName: ${e.message}")
             emptyList()
         }
+
+    /**
+     * Writes the aggregated data to the specified output file in JSON format with pretty printing.
+     *
+     * @param outputFileName The name of the file to write the aggregated data.
+     * @param outputData List of [DailySummary] objects representing the aggregated data.
+     */
+    fun writeOutputFile(outputFileName: String, outputData: List<DailySummary>) =
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(File(outputFileName), outputData)
 
     /**
      * Aggregates user events and generates a report, updating existing output if specified.
@@ -87,7 +99,6 @@ class EventAggregator {
                         "post" -> dailySummary.post++
                         "likeReceived" -> dailySummary.likeReceived++
                         "comment" -> dailySummary.comment++
-                        // Add more cases for additional event types if needed
                     }
                 }
         }
@@ -96,6 +107,6 @@ class EventAggregator {
         val outputData = userDailySummary.values.flatMap { it.values }
 
         // Write the summary to the output JSON file
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(File(outputFileName), outputData)
+        writeOutputFile(outputFileName, outputData)
     }
 }
